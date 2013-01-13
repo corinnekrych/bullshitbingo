@@ -30,21 +30,17 @@ bingo.view.gameview = function (model, elements) {
             if (!data.item.NOTIFIED) {
                 that.gameId = data.item.id;
                 that.board = data.item.board;
-
-                $.mobile.changePage($("#section-show-game"), {data: {hideSave:true}});
+                $.mobile.changePage($('#section-show-game'));
                 $('#submit-game').hide();
                 initBoard(that.board);
-            } else {
-                $.mobile.changePage($('#section-list-game'));
             }
             // Bingo: end
-
 		}
     });
 
     var initBoard = function(board) {
         // Reset HTML grid
-        $("#grid").empty();
+        $('#grid').empty();
         that.parsedBoard = JSON.parse(board);
 
         // Populate HTML grid with randomly fed card
@@ -57,14 +53,14 @@ bingo.view.gameview = function (model, elements) {
             }
             var charTheme = String.fromCharCode(97 + modulo);
             out = out + '<div id="item_' + i + '" class="line-'+ line +' ui-block-'+ charTheme +'"><div class="ui-bar ui-bar-e" style="padding: .4em 2px;text-align : left;height:50px"><br>'+ that.parsedBoard[i].label+'</div></div>';
-        };
-        $("#grid").append(out);
+        }
+        $('#grid').append(out);
 
         // Add event to each cell of grid
         for (var i = 0 ; i <that.parsedBoard.length; i++) {
-            var selector = "#item_" + i + " div";
-                $(selector).on("click", null, {scope: that, index: i}, that.selectItem);
-        };
+            var selector = '#item_' + i + ' div';
+                $(selector).on('click', null, {scope: that, index: i}, that.selectItem);
+        }
     };
 
 
@@ -95,8 +91,8 @@ bingo.view.gameview = function (model, elements) {
 
         if(isFifthColum || isFourthColum || isThirdColum || isSecondColum || isFirstColum
             || isFifthLine || isFourthLine || isThirdLine || isSecondLine || isFirstLine) {
-            $("#bingoDialog").click();
             if (that.gameId){
+                $('#bingoDialog').click();
                 that.deleteButtonClicked.notify({ id: that.gameId, playerName: that.playerName });
             }
         }
@@ -125,8 +121,8 @@ bingo.view.gameview = function (model, elements) {
         } else {
             $('#game-list-' + data.item.id).parents('li').remove();
             $('#list-game').listview('refresh');
-            if (that.playerName != data.item.playerName) {
-                $('#winner').append('<h3>The Winner is <b>' + data.item.playerName + '</b></h3>');
+            if (that.gameId == data.item.id && that.playerName != data.item.playerName ) {
+                $('#winner').replaceWith('<h3>The Winner is <b>' + data.item.playerName + '</b></h3>');
                 $('#bingoLost').click();
             }
             that.gameId = null;
@@ -181,7 +177,7 @@ bingo.view.gameview = function (model, elements) {
 
     that.elements.show.live('click tap', function (event) {
         event.stopPropagation();
-        that.gameId = $(event.currentTarget).attr("data-id");
+        that.gameId = $(event.currentTarget).attr('data-id');
         showElement(that.gameId);
         that.board = model.getItems()[that.gameId].board;
         initBoard(that.board);
@@ -209,7 +205,7 @@ bingo.view.gameview = function (model, elements) {
     };
 
     var resetForm = function (form) {
-        $("#grid").empty();
+        $('#grid').empty();
         $('input[data-type="date"]').each(function() {
             $(this).scroller('destroy').scroller({
                 preset: 'date',
@@ -219,7 +215,7 @@ bingo.view.gameview = function (model, elements) {
                 dateOrder: 'mmD ddyy'
             });
         });
-        var div = $("#" + form);
+        var div = $('#' + form);
         div.find('input:text, input:hidden, input[type="number"], input:file, input:password').val('');
         div.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
     };
